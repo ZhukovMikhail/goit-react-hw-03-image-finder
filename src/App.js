@@ -12,7 +12,7 @@ class App extends Component {
     querry: '',
     showModal: false,
     largeImg: null,
-    respLength: null,
+    totalHits: null,
     page: 1,
   };
 
@@ -35,11 +35,10 @@ class App extends Component {
       querry: querry,
     });
   };
-  onRespLength = respLength => {
+  totalHits = totalHits => {
     this.setState({
-      respLength: respLength,
+      totalHits: totalHits,
     });
-    console.log(this.state.respLength);
   };
 
   onLoadMore = () => {
@@ -55,12 +54,12 @@ class App extends Component {
         <div className="section">
           <SearchBar onSubmit={this.onSearchSubmit} />
           <ImageGallery
-            resplength={this.onRespLength}
+            totalHits={this.totalHits}
             querry={this.state.querry}
             onImageClick={this.onImageClick}
             onLoadMore={this.state.page}
           />
-          {this.state.respLength && <Button onLoadMore={this.onLoadMore} />}
+          {this.state.totalHits && <Button onLoadMore={this.onLoadMore} />}
           {this.state.showModal && (
             <Modal onToggleModal={this.toggleModal}>
               <img src={this.state.largeImg} alt={this.state.querry} />

@@ -5,7 +5,7 @@ export default class ImageGalleryItem extends Component {
     querry: [],
     perPage: 12,
     pageNumber: 1,
-    respLength: null,
+    totalHits: null,
   };
   componentDidUpdate(prevProps, prevState) {
     if (
@@ -23,15 +23,19 @@ export default class ImageGalleryItem extends Component {
         .then(r => {
           this.setState({
             querry: r.hits,
-            respLength: r.hits.length,
+            totalHits: r.totalHits,
           });
-          console.log(this.state.respLength);
-          this.props.resplength(this.state.respLength);
+          console.log(r);
+          console.log(this.state.totalHits);
+          this.props.totalHits(this.state.totalHits);
         });
     }
     if (this.props.onLoadMore !== this.state.pageNumber) {
       this.setState(prev => ({
-        perPage: prev.perPage + 12,
+        perPage:
+          prev.perPage + 12 < this.state.totalHits
+            ? prev.perPage + 12
+            : this.state.totalHits,
         pageNumber: prev.pageNumber + 1,
       }));
     }

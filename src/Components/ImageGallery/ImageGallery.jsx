@@ -8,7 +8,7 @@ export default class ImageGallery extends Component {
         <ImageGalleryItem
           querry={this.props.querry}
           onClick={this.props.onImageClick}
-          resplength={this.props.resplength}
+          totalHits={this.props.totalHits}
           onResponceLength={this.props.onResponceLength}
           onLoadMore={this.props.onLoadMore}
         />
