@@ -14,6 +14,7 @@ class SearchBar extends Component {
       return;
     }
     this.props.onSubmit(this.state.searchQuerry);
+    this.setState({ searchQuerry: '' });
   };
   render() {
     return (
@@ -30,6 +31,7 @@ class SearchBar extends Component {
             autoFocus
             placeholder="Search images and photos"
             onChange={this.onSearchFormChange}
+            value={this.state.searchQuerry}
           />
         </form>
       </header>

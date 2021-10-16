@@ -6,6 +6,7 @@ import SearchBar from './Components/Searchbar/SearchBar.jsx';
 import ImageGallery from './Components/ImageGallery/ImageGallery.jsx';
 import Modal from './Components/Modal/Modal';
 import Button from './Components/Button/Button.jsx';
+import Loader from 'react-loader-spinner';
 
 class App extends Component {
   state = {
@@ -14,6 +15,7 @@ class App extends Component {
     largeImg: null,
     totalHits: null,
     page: 1,
+    loading: false,
   };
 
   toggleModal = () => {
@@ -33,12 +35,17 @@ class App extends Component {
     console.log(querry);
     this.setState({
       querry: querry,
+      page: 1,
     });
   };
   totalHits = totalHits => {
-    this.setState({
-      totalHits: totalHits,
-    });
+    totalHits === 0
+      ? this.setState({
+          totalHits: null,
+        })
+      : this.setState({
+          totalHits: totalHits,
+        });
   };
 
   onLoadMore = () => {
@@ -47,35 +54,46 @@ class App extends Component {
       page: prev.page + 1,
     }));
   };
+  onLoading = () => {
+    this.setState({ loading: !this.state.loading });
+  };
 
   render() {
     return (
-      <>
-        <div className="section">
-          <SearchBar onSubmit={this.onSearchSubmit} />
-          <ImageGallery
-            totalHits={this.totalHits}
-            querry={this.state.querry}
-            onImageClick={this.onImageClick}
-            onLoadMore={this.state.page}
+      <div className="section">
+        <SearchBar onSubmit={this.onSearchSubmit} />
+        {this.state.loading && (
+          <Loader
+            type="Bars"
+            className="spinner"
+            color="#00BFFF"
+            height={50}
+            width={50}
           />
-          {this.state.totalHits && <Button onLoadMore={this.onLoadMore} />}
-          {this.state.showModal && (
-            <Modal onToggleModal={this.toggleModal}>
-              <img src={this.state.largeImg} alt={this.state.querry} />
-              <button
-                className="closeBtn"
-                type="button"
-                onClick={this.toggleModal}
-              >
-                X
-              </button>
-            </Modal>
-          )}
+        )}
+        <ImageGallery
+          querry={this.state.querry}
+          page={this.state.page}
+          totalHits={this.totalHits}
+          onClick={this.onImageClick}
+          loading={this.onLoading}
+        />
 
-          <ToastContainer position="top-center" autoClose={1000} />
-        </div>
-      </>
+        {this.state.totalHits && <Button onLoadMore={this.onLoadMore} />}
+        {this.state.showModal && (
+          <Modal onToggleModal={this.toggleModal}>
+            <img src={this.state.largeImg} alt={this.state.querry} />
+            <button
+              className="closeBtn"
+              type="button"
+              onClick={this.toggleModal}
+            >
+              X
+            </button>
+          </Modal>
+        )}
+        <ToastContainer position="top-center" autoClose={1000} />
+      </div>
     );
   }
 }

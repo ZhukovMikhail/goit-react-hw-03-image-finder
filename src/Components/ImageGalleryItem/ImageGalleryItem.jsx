@@ -6,12 +6,31 @@ export default class ImageGalleryItem extends Component {
     perPage: 12,
     pageNumber: 1,
     totalHits: null,
+    loading: false,
+    error: false,
   };
+
   componentDidUpdate(prevProps, prevState) {
+    if (this.props.page !== this.state.pageNumber) {
+      if (this.props.page === 1) {
+        this.setState({
+          perPage: 12,
+          pageNumber: 1,
+        });
+        return;
+      }
+      this.setState(prev => ({
+        perPage: prev.perPage + 12,
+        pageNumber: prev.pageNumber + 1,
+      }));
+    }
     if (
       prevProps.querry !== this.props.querry ||
-      prevState.pageNumber !== this.props.onLoadMore
+      prevState.pageNumber !== this.props.page
     ) {
+      this.setState({ loading: true });
+      this.props.loading(this.state.loading);
+
       console.log('change querry');
       console.log('Prev querry', prevProps.querry);
       console.log('text of querry', this.props.querry);
@@ -28,33 +47,42 @@ export default class ImageGalleryItem extends Component {
           console.log(r);
           console.log(this.state.totalHits);
           this.props.totalHits(this.state.totalHits);
+        })
+        .catch(error => {
+          console.log(error);
+          this.setState({
+            querry: [],
+            totalHits: null,
+            error: true,
+          });
+        })
+        .finally(() => {
+          this.setState({ loading: false });
+          this.props.loading(this.state.loading);
         });
     }
-    if (this.props.onLoadMore !== this.state.pageNumber) {
-      this.setState(prev => ({
-        perPage:
-          prev.perPage + 12 < this.state.totalHits
-            ? prev.perPage + 12
-            : this.state.totalHits,
-        pageNumber: prev.pageNumber + 1,
-      }));
-    }
+
     window.scrollTo({
       top: document.documentElement.scrollHeight,
       behavior: 'smooth',
     });
   }
+
   render() {
-    return this.state.querry.map(q => (
-      <li className="ImageGalleryItem" key={q.id}>
-        <img
-          onClick={this.props.onClick}
-          src={q.webformatURL}
-          data-src={q.largeImageURL}
-          alt={q.tags}
-          className="ImageGalleryItem-image"
-        />
-      </li>
-    ));
+    return this.state.totalHits !== 0 ? (
+      this.state.querry.map(q => (
+        <li className="ImageGalleryItem" key={q.id}>
+          <img
+            onClick={this.props.onClick}
+            src={q.webformatURL}
+            data-src={q.largeImageURL}
+            alt={q.tags}
+            className="ImageGalleryItem-image"
+          />
+        </li>
+      ))
+    ) : (
+      <h2 className="title"> No match found</h2>
+    );
   }
 }

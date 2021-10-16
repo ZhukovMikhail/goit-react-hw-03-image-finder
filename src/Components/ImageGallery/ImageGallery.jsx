@@ -7,10 +7,10 @@ export default class ImageGallery extends Component {
       <ul className="ImageGallery">
         <ImageGalleryItem
           querry={this.props.querry}
-          onClick={this.props.onImageClick}
+          page={this.props.page}
           totalHits={this.props.totalHits}
-          onResponceLength={this.props.onResponceLength}
-          onLoadMore={this.props.onLoadMore}
+          onClick={this.props.onClick}
+          loading={this.props.loading}
         />
       </ul>
     );
