@@ -16,6 +16,7 @@ class App extends Component {
     totalHits: null,
     page: 1,
     loading: false,
+    showLoadMoreButton: false,
   };
 
   toggleModal = () => {
@@ -23,6 +24,7 @@ class App extends Component {
       showModal: !state.showModal,
     }));
   };
+
   onImageClick = e => {
     if ((e.target = 'IMG')) {
       this.toggleModal();
@@ -56,6 +58,9 @@ class App extends Component {
   };
   onLoading = () => {
     this.setState({ loading: !this.state.loading });
+  };
+  onError = () => {
+    this.setState({});
   };
 
   render() {

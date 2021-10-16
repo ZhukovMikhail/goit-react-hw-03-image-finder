@@ -28,7 +28,7 @@ export default class ImageGalleryItem extends Component {
       prevProps.querry !== this.props.querry ||
       prevState.pageNumber !== this.props.page
     ) {
-      this.setState({ loading: true });
+      this.setState({ loading: true, error: false });
       this.props.loading(this.state.loading);
 
       console.log('change querry');
@@ -55,6 +55,7 @@ export default class ImageGalleryItem extends Component {
             totalHits: null,
             error: true,
           });
+          this.props.totalHits(this.state.totalHits);
         })
         .finally(() => {
           this.setState({ loading: false });
@@ -69,20 +70,24 @@ export default class ImageGalleryItem extends Component {
   }
 
   render() {
-    return this.state.totalHits !== 0 ? (
-      this.state.querry.map(q => (
-        <li className="ImageGalleryItem" key={q.id}>
-          <img
-            onClick={this.props.onClick}
-            src={q.webformatURL}
-            data-src={q.largeImageURL}
-            alt={q.tags}
-            className="ImageGalleryItem-image"
-          />
-        </li>
-      ))
+    return !this.state.error ? (
+      this.state.totalHits !== 0 ? (
+        this.state.querry.map(q => (
+          <li className="ImageGalleryItem" key={q.id}>
+            <img
+              onClick={this.props.onClick}
+              src={q.webformatURL}
+              data-src={q.largeImageURL}
+              alt={q.tags}
+              className="ImageGalleryItem-image"
+            />
+          </li>
+        ))
+      ) : (
+        <h2 className="title"> No match found</h2>
+      )
     ) : (
-      <h2 className="title"> No match found</h2>
+      <h2 className="title"> Something goes wrong</h2>
     );
   }
 }
