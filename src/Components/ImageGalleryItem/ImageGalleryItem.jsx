@@ -84,10 +84,10 @@ export default class ImageGalleryItem extends Component {
           </li>
         ))
       ) : (
-        <h2 className="title"> No match found</h2>
+        <h2 className="title"> No match found ...</h2>
       )
     ) : (
-      <h2 className="title"> Something goes wrong</h2>
+      <h2 className="title"> Something goes wrong ... </h2>
     );
   }
 }
