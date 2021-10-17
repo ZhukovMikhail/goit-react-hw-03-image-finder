@@ -10,6 +10,12 @@ export default class ImageGalleryItem extends Component {
     error: false,
     imgLength: null,
   };
+  pageDown = () => {
+    window.scrollTo({
+      top: document.documentElement.scrollHeight,
+      behavior: 'smooth',
+    });
+  };
 
   componentDidUpdate(prevProps, prevState) {
     if (
@@ -40,6 +46,9 @@ export default class ImageGalleryItem extends Component {
           console.log(r);
           console.log(this.state.totalHits);
           this.props.totalHits(this.state.totalHits, this.state.imgLength);
+          if (this.state.pageNumber !== 1) {
+            this.pageDown();
+          }
         })
         .catch(error => {
           console.log(error);
@@ -56,12 +65,9 @@ export default class ImageGalleryItem extends Component {
           this.props.loading(this.state.loading);
         });
     }
-    if (this.state.pageNumber !== 1) {
-      window.scrollTo({
-        top: document.documentElement.scrollHeight,
-        behavior: 'smooth',
-      });
-    }
+    // if (this.state.pageNumber !== 1) {
+    //   this.pageDown();
+    // }
   }
 
   render() {
