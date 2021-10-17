@@ -16,7 +16,6 @@ class App extends Component {
     totalHits: null,
     page: 1,
     loading: false,
-    showLoadMoreButton: false,
   };
 
   toggleModal = () => {
