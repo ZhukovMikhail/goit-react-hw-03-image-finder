@@ -3,7 +3,7 @@ import React, { Component } from 'react';
 export default class ImageGalleryItem extends Component {
   state = {
     images: [],
-    perPage: 3,
+    perPage: 12,
     pageNumber: 1,
     totalHits: null,
     loading: false,
@@ -25,9 +25,9 @@ export default class ImageGalleryItem extends Component {
       this.setState({ loading: true, error: false });
       this.props.loading(this.state.loading);
 
-      console.log('change querry');
-      console.log('Prev querry', prevProps.querry);
-      console.log('text of querry', this.props.querry);
+      // console.log('change querry');
+      // console.log('Prev querry', prevProps.querry);
+      // console.log('text of querry', this.props.querry);
 
       const USER_KEY = '22985243-b477986a48324befacd1d8a65';
       fetch(
