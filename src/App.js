@@ -16,6 +16,7 @@ class App extends Component {
     totalHits: null,
     page: 1,
     loading: false,
+    imgLength: null,
   };
 
   toggleModal = () => {
@@ -39,13 +40,14 @@ class App extends Component {
       page: 1,
     });
   };
-  totalHits = totalHits => {
+  totalHits = (totalHits, imgLength) => {
     totalHits === 0
       ? this.setState({
           totalHits: null,
         })
       : this.setState({
           totalHits: totalHits,
+          imgLength: imgLength,
         });
   };
 
@@ -83,7 +85,12 @@ class App extends Component {
           loading={this.onLoading}
         />
 
-        {this.state.totalHits > 12 && <Button onLoadMore={this.onLoadMore} />}
+        {
+          (this.state.totalHits > 12,
+          this.state.totalHits > this.state.imgLength && (
+            <Button onLoadMore={this.onLoadMore} />
+          ))
+        }
         {this.state.showModal && (
           <Modal onToggleModal={this.toggleModal}>
             <img src={this.state.largeImg} alt={this.state.querry} />

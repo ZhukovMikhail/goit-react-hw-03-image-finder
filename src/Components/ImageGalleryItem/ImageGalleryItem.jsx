@@ -8,6 +8,7 @@ export default class ImageGalleryItem extends Component {
     totalHits: null,
     loading: false,
     error: false,
+    imgLength: null,
   };
 
   componentDidUpdate(prevProps, prevState) {
@@ -18,16 +19,12 @@ export default class ImageGalleryItem extends Component {
       if (this.props.page === 1) {
         prevState.images = [];
       }
-      this.setState(prevState => ({
-        // perPage: prevState.perPage + 12,
+      this.setState({
         pageNumber: this.props.page,
-      }));
+      });
+
       this.setState({ loading: true, error: false });
       this.props.loading(this.state.loading);
-
-      // console.log('change querry');
-      // console.log('Prev querry', prevProps.querry);
-      // console.log('text of querry', this.props.querry);
 
       const USER_KEY = '22985243-b477986a48324befacd1d8a65';
       fetch(
@@ -38,10 +35,11 @@ export default class ImageGalleryItem extends Component {
           this.setState({
             images: [...prevState.images, ...r.hits],
             totalHits: r.totalHits,
+            imgLength: [...prevState.images, ...r.hits].length,
           });
           console.log(r);
           console.log(this.state.totalHits);
-          this.props.totalHits(this.state.totalHits);
+          this.props.totalHits(this.state.totalHits, this.state.imgLength);
         })
         .catch(error => {
           console.log(error);
@@ -49,6 +47,7 @@ export default class ImageGalleryItem extends Component {
             images: [],
             totalHits: null,
             error: true,
+            imgLength: null,
           });
           this.props.totalHits(this.state.totalHits);
         })
@@ -57,7 +56,7 @@ export default class ImageGalleryItem extends Component {
           this.props.loading(this.state.loading);
         });
     }
-    if (this.state.pageNumber !== 1 || prevProps.querry === this.props.querry) {
+    if (this.state.pageNumber !== 1 || prevProps.querry !== this.props.querry) {
       window.scrollTo({
         top: document.documentElement.scrollHeight,
         behavior: 'smooth',
