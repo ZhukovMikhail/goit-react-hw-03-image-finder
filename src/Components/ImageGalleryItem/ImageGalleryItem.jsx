@@ -56,7 +56,7 @@ export default class ImageGalleryItem extends Component {
           this.props.loading(this.state.loading);
         });
     }
-    if (this.state.pageNumber !== 1 || prevProps.querry !== this.props.querry) {
+    if (this.state.pageNumber !== 1) {
       window.scrollTo({
         top: document.documentElement.scrollHeight,
         behavior: 'smooth',
