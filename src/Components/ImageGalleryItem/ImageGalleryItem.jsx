@@ -65,9 +65,6 @@ export default class ImageGalleryItem extends Component {
           this.props.loading(this.state.loading);
         });
     }
-    // if (this.state.pageNumber !== 1) {
-    //   this.pageDown();
-    // }
   }
 
   render() {
