@@ -2,8 +2,8 @@ import React, { Component } from 'react';
 
 export default class ImageGalleryItem extends Component {
   state = {
-    images: [],
-    perPage: 3,
+    imgList: [],
+    perPage: 12,
     pageNumber: 1,
     totalHits: null,
     loading: false,
@@ -11,24 +11,29 @@ export default class ImageGalleryItem extends Component {
   };
 
   componentDidUpdate(prevProps, prevState) {
+    if (this.props.page !== this.state.pageNumber) {
+      if (this.props.page === 1) {
+        this.setState({
+          perPage: 12,
+          pageNumber: 1,
+        });
+        return;
+      }
+      this.setState(prev => ({
+        perPage: prev.perPage + 12,
+        pageNumber: prev.pageNumber + 1,
+      }));
+    }
     if (
       prevProps.querry !== this.props.querry ||
       prevState.pageNumber !== this.props.page
     ) {
-      if (this.props.page === 1) {
-        prevState.images = [];
-      }
-      this.setState(prevState => ({
-        // perPage: prevState.perPage + 12,
-        pageNumber: this.props.page,
-      }));
       this.setState({ loading: true, error: false });
       this.props.loading(this.state.loading);
 
       console.log('change querry');
       console.log('Prev querry', prevProps.querry);
       console.log('text of querry', this.props.querry);
-
       const USER_KEY = '22985243-b477986a48324befacd1d8a65';
       fetch(
         `https://pixabay.com/api/?q=${this.props.querry}&page=${this.state.pageNumber}&key=${USER_KEY}&image_type=photo&orientation=horizontal&per_page=${this.state.perPage}`,
@@ -36,7 +41,7 @@ export default class ImageGalleryItem extends Component {
         .then(r => r.json())
         .then(r => {
           this.setState({
-            images: [...prevState.images, ...r.hits],
+            imgList: r.hits,
             totalHits: r.totalHits,
           });
           console.log(r);
@@ -46,7 +51,7 @@ export default class ImageGalleryItem extends Component {
         .catch(error => {
           console.log(error);
           this.setState({
-            images: [],
+            imgList: [],
             totalHits: null,
             error: true,
           });
@@ -57,24 +62,22 @@ export default class ImageGalleryItem extends Component {
           this.props.loading(this.state.loading);
         });
     }
-    if (this.state.pageNumber !== 1 || prevProps.querry === this.props.querry) {
-      window.scrollTo({
-        top: document.documentElement.scrollHeight,
-        behavior: 'smooth',
-      });
-    }
+    window.scrollTo({
+      top: document.documentElement.scrollHeight,
+      behavior: 'smooth',
+    });
   }
 
   render() {
     return !this.state.error ? (
       this.state.totalHits !== 0 ? (
-        this.state.images.map(image => (
-          <li className="ImageGalleryItem" key={image.id}>
+        this.state.imgList.map(q => (
+          <li className="ImageGalleryItem" key={q.id}>
             <img
               onClick={this.props.onClick}
-              src={image.webformatURL}
-              data-src={image.largeImageURL}
-              alt={image.tags}
+              src={q.webformatURL}
+              data-src={q.largeImageURL}
+              alt={q.tags}
               className="ImageGalleryItem-image"
             />
           </li>
